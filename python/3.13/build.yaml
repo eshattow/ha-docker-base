@@ -1,13 +1,13 @@
-image: ghcr.io/home-assistant/{arch}-base-python
+image: ghcr.io/${{ github.repository_owner }}/{arch}-base-python
 build_from:
-  aarch64: "ghcr.io/home-assistant/aarch64-base:"
-  armv7: "ghcr.io/home-assistant/armv7-base:"
-  armhf: "ghcr.io/home-assistant/armhf-base:"
-  amd64: "ghcr.io/home-assistant/amd64-base:"
-  i386: "ghcr.io/home-assistant/i386-base:"
+  aarch64: "ghcr.io/${{ github.repository_owner }}/aarch64-base:"
+  armv7: "ghcr.io/${{ github.repository_owner }}/armv7-base:"
+  armhf: "ghcr.io/${{ github.repository_owner }}/armhf-base:"
+  amd64: "ghcr.io/${{ github.repository_owner }}/amd64-base:"
+  i386: "ghcr.io/${{ github.repository_owner }}/i386-base:"
 cosign:
-  base_identity: https://github.com/home-assistant/docker-base/.*
-  identity: https://github.com/home-assistant/docker-base/.*
+  base_identity: https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/.*
+  identity: https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/.*
 args:
   PYTHON_VERSION: "3.13.7"
   PIP_VERSION: "25.2"
@@ -15,4 +15,4 @@ args:
   CERT_OIDC_ISSUER: https://accounts.google.com
 labels:
   io.hass.base.name: python
-  org.opencontainers.image.source: https://github.com/home-assistant/docker-base
+  org.opencontainers.image.source: https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
