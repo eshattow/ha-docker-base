@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY_PREFIX: ghcr.io/${{ github.repository_owner }}
-  ARCHITECTURES: '["amd64", "aarch64"]'
+  ARCHITECTURES: '["riscv64"]'
   ALPINE_LATEST: "3.23"
   DEBIAN_LATEST: "trixie"
   UBUNTU_LATEST: "24.04"
@@ -68,6 +68,7 @@ jobs:
       fail-fast: false
       matrix:
         alpine_version: ["3.21", "3.22", "3.23"]
+        exclude: [{alpine_version: 3.21}, {alpine_version: 3.22}]
     permissions:
       contents: read
       id-token: write # For cosign signing
@@ -77,6 +78,9 @@ jobs:
       architectures: ${{ needs.init.outputs.architectures }}
       build-args: |
         ALPINE_VERSION=${{ matrix.alpine_version }}
+        EXTRA_INDEX_URL=${{ vars.EXTRA_INDEX_URL }}
+        TEMPIO_REPOSITORY=${{ vars.TEMPIO_REPOSITORY }}
+        TEMPIO_VERSION=${{ vars.TEMPIO_VERSION }}
       cache-gha-scope: alpine-${{ matrix.alpine_version }}
       cache-image-tag: ${{ matrix.alpine_version }}
       context: alpine
@@ -97,6 +101,7 @@ jobs:
       fail-fast: false
       matrix:
         debian_version: ["bookworm", "trixie"]
+        exclude: [{debian_version: bookworm}]
     permissions:
       contents: read
       id-token: write # For cosign signing
@@ -106,6 +111,8 @@ jobs:
       architectures: ${{ needs.init.outputs.architectures }}
       build-args: |
         DEBIAN_VERSION=${{ matrix.debian_version }}
+        TEMPIO_REPOSITORY=${{ vars.TEMPIO_REPOSITORY }}
+        TEMPIO_VERSION=${{ vars.TEMPIO_VERSION }}
       cache-gha-scope: debian-${{ matrix.debian_version }}
       cache-image-tag: ${{ matrix.debian_version }}
       context: debian
@@ -126,6 +133,7 @@ jobs:
       fail-fast: false
       matrix:
         ubuntu_version: ["22.04", "24.04"]
+        exclude: [{ubuntu_version: 22.04}]
     permissions:
       contents: read
       id-token: write # For cosign signing
@@ -135,6 +143,8 @@ jobs:
       architectures: ${{ needs.init.outputs.architectures }}
       build-args: |
         UBUNTU_VERSION=${{ matrix.ubuntu_version }}
+        TEMPIO_REPOSITORY=${{ vars.TEMPIO_REPOSITORY }}
+        TEMPIO_VERSION=${{ vars.TEMPIO_VERSION }}
       cache-gha-scope: ubuntu-${{ matrix.ubuntu_version }}
       cache-image-tag: ${{ matrix.ubuntu_version }}
       context: ubuntu
@@ -156,6 +166,7 @@ jobs:
       matrix:
         alpine_version: ["3.21", "3.22", "3.23"]
         python_version: ["3.12", "3.13", "3.14"]
+        exclude: [{alpine_version: 3.21}, {alpine_version: 3.22}, {python_version: 3.12}, {python_version: 3.13}]
     permissions:
       contents: read
       id-token: write # For cosign signing
